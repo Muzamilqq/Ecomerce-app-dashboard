@@ -4,6 +4,8 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 import SideBar from "./components/SideBar";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -11,6 +13,12 @@ import ResetPassword from "./pages/ResetPassword";
 import { ToastContainer } from "react-toastify";
 
 function App() {
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+
+  const renderDashboardContent = () => {
+    return <h1>Dashboard</h1>; // temporary (you can replace later)
+  };
+
   return (
     <Router>
       <Routes>
@@ -18,7 +26,6 @@ function App() {
         <Route path="/password/forgot" element={<ForgotPassword />} />
         <Route path="/password/reset/:token" element={<ResetPassword />} />
 
-        {/* Protected Admin Route */}
         <Route
           path="/"
           element={
