@@ -29,7 +29,6 @@ const UpdateProductModal = ({ selectedProduct }) => {
 
   useEffect(() => {
     if (selectedProduct) {
-      console.log(selectedProduct);
       setFormData({
         name: selectedProduct.name || "",
         description: selectedProduct.description || "",
@@ -51,7 +50,8 @@ const UpdateProductModal = ({ selectedProduct }) => {
       stock: formData.stock,
     };
 
-    dispatch(updateProduct(data, selectedProduct.id));
+    // FIX: pass a single object { data, productId } instead of two arguments
+    dispatch(updateProduct({ data, productId: selectedProduct.id }));
   };
 
   return (

@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  updateProfile,
-  updatePassword,
-  logoutUser,
-} from "../store/slices/authSlice";
+import { updateProfile, logoutUser } from "../store/slices/authSlice";
 import Header from "./Header";
 import avatar from "../assets/avatar.jpg";
 import { LoaderCircle, Upload, LogOut } from "lucide-react";
@@ -30,13 +26,6 @@ const Profile = () => {
     fd.append("email", email);
     if (avatarFile) fd.append("avatar", avatarFile);
     dispatch(updateProfile(fd));
-  };
-
-  const handlePasswordUpdate = (e) => {
-    e.preventDefault();
-    dispatch(
-      updatePassword({ currentPassword, newPassword, confirmNewPassword }),
-    );
   };
 
   const handleLogout = () => {

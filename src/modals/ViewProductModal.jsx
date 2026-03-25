@@ -14,24 +14,28 @@ const ViewProductModal = ({ selectedProduct }) => {
           >
             &times;
           </button>
-          <h2 className="text-2xl font-bold mb-4">{selectedProduct.title}</h2>
+          {/* FIX: was selectedProduct.title — field is actually .name */}
+          <h2 className="text-2xl font-bold mb-4">{selectedProduct.name}</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Images */}
             <div className="grid grid-cols-2 gap-3">
-              {selectedProduct.images.map((img, idx) => (
+              {selectedProduct.images?.map((img, idx) => (
                 <img
                   key={idx}
                   src={img?.url}
                   alt={`Product ${idx}`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover rounded-lg"
                 />
               ))}
             </div>
             {/* Info */}
-            <div>
+            <div className="space-y-2 text-sm">
               <p>
                 <strong>ID:</strong> {selectedProduct.id}
+              </p>
+              <p>
+                <strong>Name:</strong> {selectedProduct.name}
               </p>
               <p>
                 <strong>Description:</strong> {selectedProduct.description}
@@ -40,11 +44,12 @@ const ViewProductModal = ({ selectedProduct }) => {
                 <strong>Category:</strong> {selectedProduct.category}
               </p>
               <p>
-                <strong>Price:</strong> Rs{" "}
-                {selectedProduct.price.toLocaleString()}
+                <strong>Price:</strong> $
+                {parseFloat(selectedProduct.price).toFixed(2)}
               </p>
               <p>
-                <strong>Ratings:</strong> ⭐ {selectedProduct.ratings}
+                <strong>Ratings:</strong> ⭐{" "}
+                {parseFloat(selectedProduct.ratings).toFixed(1)}
               </p>
               <p>
                 <strong>Stock:</strong>{" "}

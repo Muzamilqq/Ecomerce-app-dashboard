@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const API = "https://ecomerce-app-backend.vercel.app/api/v1";
 
@@ -44,10 +45,43 @@ export const logoutUser = createAsyncThunk(
   },
 );
 
+export const updateProfile = createAsyncThunk(
+  "auth/updateProfile",
+  async (formData, { rejectWithValue }) => {
+    try {
+      const res = await axios.put(`${API}/auth/profile/update`, formData, {
+        withCredentials: true,
+      });
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Update failed");
+    }
+  },
+);
+
+export const updatePassword = createAsyncThunk(
+  "auth/updatePassword",
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await axios.put(`${API}/auth/password/update`, data, {
+        withCredentials: true,
+      });
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Password update failed",
+      );
+    }
+  },
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
     loading: false,
+    isLoggingIn: false,
+    isUpdatingProfile: false,
+    isUpdatingPassword: false,
     user: null,
     isAuthenticated: false,
     error: null,
@@ -76,22 +110,48 @@ const authSlice = createSlice({
     });
     // loginUser
     builder.addCase(loginUser.pending, (state) => {
-      state.loading = true;
+      state.isLoggingIn = true;
       state.error = null;
     });
     builder.addCase(loginUser.fulfilled, (state, action) => {
-      state.loading = false;
+      state.isLoggingIn = false;
       state.user = action.payload.user;
       state.isAuthenticated = true;
+      toast.success("Logged in successfully!");
     });
     builder.addCase(loginUser.rejected, (state, action) => {
-      state.loading = false;
+      state.isLoggingIn = false;
       state.error = action.payload;
     });
     // logoutUser
     builder.addCase(logoutUser.fulfilled, (state) => {
       state.user = null;
       state.isAuthenticated = false;
+    });
+    // updateProfile
+    builder.addCase(updateProfile.pending, (state) => {
+      state.isUpdatingProfile = true;
+    });
+    builder.addCase(updateProfile.fulfilled, (state, action) => {
+      state.isUpdatingProfile = false;
+      state.user = action.payload.user;
+      toast.success("Profile updated successfully!");
+    });
+    builder.addCase(updateProfile.rejected, (state, action) => {
+      state.isUpdatingProfile = false;
+      toast.error(action.payload);
+    });
+    // updatePassword
+    builder.addCase(updatePassword.pending, (state) => {
+      state.isUpdatingPassword = true;
+    });
+    builder.addCase(updatePassword.fulfilled, (state) => {
+      state.isUpdatingPassword = false;
+      toast.success("Password updated successfully!");
+    });
+    builder.addCase(updatePassword.rejected, (state, action) => {
+      state.isUpdatingPassword = false;
+      toast.error(action.payload);
     });
   },
 });
